@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>8qg8 Web Spammer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* --- ベース設定 --- */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin:0; padding:0;
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* --- スクロールバー --- */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #111; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: #39ff14; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00ff7f; }
+
+    /* --- カード --- */
+    .card {
+      background: #111;
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #39ff14, 0 0 40px #00ff7f;
+      width: 100%;
+      max-width: 600px;
+      overflow: auto;
+      max-height: 95vh;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #39ff14;
+      margin-bottom: 24px;
+      font-weight: 600;
+      text-shadow: 0 0 8px #39ff14, 0 0 16px #00ff7f;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #fff;
+      text-shadow: 0 0 3px #00ff7f;
+    }
+
+    /* --- 入力欄 --- */
+    input[type="text"], textarea, input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #39ff14;
+      background: #111;
+      color: #fff;
+      font-family: monospace;
+      outline: none;
+      box-shadow: 0 0 6px #39ff14 inset;
+      transition: 0.3s;
+    }
+
+    input[type="text"]:focus, textarea:focus, input[type="number"]:focus {
+      border-color: #00ff7f;
+      box-shadow: 0 0 12px #00ff7f inset;
+    }
+
+    /* --- フレックス行 --- */
+    .row {
+      display: flex; gap: 12px; align-items: center;
+    }
+    .row > * { flex: none; }
+    .row label, .row .checkbox-container { margin-top: 0; }
+
+    /* --- チェックボックス --- */
+    .checkbox-container {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; font-size: 14px; user-select: none;
+      margin-top: 6px;
+    }
+    .checkbox-container input {
+      appearance: none; width: 36px; height: 18px;
+      background: #222; border-radius: 18px;
+      position: relative; transition: background .3s ease;
+      box-shadow: 0 0 4px #39ff14;
+    }
+    .checkbox-container:hover input { background: #333; }
+    .checkbox-container input:checked { background: #39ff14; }
+    .checkbox-container input::before {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #fff; top: 2px; left: 2px;
+      transition: transform .3s cubic-bezier(.68,-.55,.27,1.55);
+      box-shadow: 0 0 4px #00ff7f;
+    }
+    .checkbox-container input:checked::before {
+      transform: translateX(18px);
+    }
+    .checkbox-container span { transition: color .3s; }
+    .checkbox-container input:checked + span {
+      color: #00ff7f;
+    }
+
+    /* --- ラジオボタン --- */
+    .radio-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 14px;
+      margin-right: 16px;
+    }
+    .radio-container input[type="radio"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #222;
+      border: 2px solid #39ff14;
+      border-radius: 50%;
+      position: relative;
+      transition: all .3s;
+      box-shadow: 0 0 4px #39ff14;
+    }
+    .radio-container input[type="radio"]::before {
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 10px; height: 10px;
+      background: #00ff7f;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform .2s ease-out;
+    }
+    .radio-container input[type="radio"]:checked::before {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .radio-container span {
+      color: #fff;
+      transition: color .3s;
+    }
+    .radio-container input[type="radio"]:checked + span {
+      color: #00ff7f;
+    }
+
+    /* --- ボタン --- */
+    button.primary {
+      margin-top: 24px; width: 100%; padding: 14px;
+      border: none; border-radius: 14px;
+      background: #39ff14;
+      color: #000; font-weight: 700; font-size: 18px;
+      letter-spacing: .5px; cursor: pointer;
+      box-shadow: 0 0 10px #39ff14, 0 0 20px #00ff7f;
+      transition: all .3s;
+    }
+    button.primary:hover {
+      box-shadow: 0 0 20px #39ff14, 0 0 40px #00ff7f;
+      transform: scale(1.03);
+    }
+    button.primary:active {
+      transform: scale(0.96);
+      box-shadow: inset 0 0 10px #00ff7f;
+    }
+
+    button.secondary {
+      margin-top: 8px; padding: 6px 12px;
+      background: #00ff7f; color: #000;
+      font-size: 14px; border: none; border-radius: 6px;
+      box-shadow: 0 0 6px #00ff7f;
+      transition: all .3s;
+    }
+    button.secondary:hover { box-shadow: 0 0 12px #00ff7f; transform: scale(1.05); }
+    button.secondary:active { transform: scale(0.95); }
+
+    /* --- 停止・退出ボタン --- */
+    #stopSpam, #leaveBtn {
+      width: 48%; padding: 10px;
+      border-radius: 10px; background: #ff073a; color: #fff;
+      font-weight: 700; font-size: 14px;
+      box-shadow: 0 0 10px #ff073a;
+      transition: all .3s;
+    }
+    #stopSpam:hover, #leaveBtn:hover {
+      box-shadow: 0 0 20px #ff073a;
+      transform: scale(1.03);
+    }
+    #stopSpam:active, #leaveBtn:active {
+      transform: scale(0.96);
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    /* --- details --- */
+    details { margin-top: 18px; }
+    summary {
+      list-style: none;
+      padding-left: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      position: relative;
+      margin-top: 0;
+      color: #00ff7f;
+      text-shadow: 0 0 4px #00ff7f;
+    }
+    summary::-webkit-details-marker { display:none; }
+    summary::before {
+      content: '▶';
+      position: absolute; left: 0; top: 50%;
+      transform: translateY(-50%); transition: transform .3s ease;
+    }
+    details[open] > summary::before {
+      transform: translateY(-50%) rotate(90deg);
+    }
+    .detail-content {
+      transform-origin: top center;
+      transform: scaleY(0); opacity: 0;
+      transition: transform .3s ease, opacity .3s ease;
+    }
+    details[open] .detail-content { transform: scaleY(1); opacity: 1; }
+
+    /* --- ログ --- */
+    #log {
+      margin-top: 20px;
+      padding: 10px;
+      height: 120px;
+      overflow-y: auto;
+      background: #111;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      box-shadow: inset 0 0 6px #00ff7f;
+      resize: vertical;
+    }
+
+    /* --- レスポンシブ --- */
+    @media (max-width: 600px) {
+      .card { padding: 16px; max-width: 100%; max-height: 100vh; border-radius: 10px; }
+      h2 { font-size: 18px; margin-bottom: 16px; }
+      label { font-size: 13px; margin-top: 12px; }
+      input[type="text"], textarea, input[type="number"] { padding: 8px; font-size: 12px; }
+      button.primary { padding: 12px; font-size: 16px; }
+      button.secondary { padding: 8px 12px; font-size: 13px; }
+      .row { flex-direction: column; align-items: stretch; }
+      .button-container { flex-direction: column; gap: 8px; }
+      #stopSpam, #leaveBtn { width: 100%; }
+      details summary { font-size: 13px; padding-left: 18px; }
+      .checkbox-container { font-size: 13px; }
+      #log { height: 80px; font-size: 11px; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>8qg8 Spammer</h2>
+    <form id="form">
+      <label>トークン
+        <textarea id="tokens" rows="4" placeholder="カンマ / 改行 / スペースで区切る MTM1ODc4MTE3NTIzMzI1MzU*****,MTEwMDU5Njc1NjQ1NjE2MTMwM*****,..."></textarea>
+      </label>
+
+      <label>サーバーID
+        <input type="text" id="guildId" required placeholder="123456789012345678">
+      </label>
+
+      <label>チャンネルID
+        <textarea id="channelIds" rows="2" placeholder="カンマ / 改行 / スペースで区切る 123456789012345678,123456789012345678,..."></textarea>
+      </label>
+      <button type="button" id="autoFillChannels" class="secondary">チャンネル自動取得</button>
+
+      <label>メッセージ内容</label>
+      <div class="row">
+        <label class="radio-container">
+          <input type="radio" name="messageOption" value="A" required checked>
+          <span>通常宣伝文</span>
+        </label>
+        <label class="radio-container">
+          <input type="radio" name="messageOption" value="B">
+          <span>クラッシュGIF宣伝文</span>
+        </label>
+        <label class="radio-container">
+          <input type="radio" name="messageOption" value="C">
+          <span>ブロック回避宣伝文</span>
+        </label>
+      </div>
+      <label class="checkbox-container">
+        <input type="checkbox" id="allmention" checked>
+        <span>EVERYONE</span>
+      </label>
+      <label class="checkbox-container">
+        <input type="checkbox" id="randomize">
+        <span>ランダマイズ</span>
+      </label>
+      <div class="row">
+        <label>メッセージ送信間隔
+          <input type="number" id="delay" min="0" step="0.1" placeholder="0"> 秒
+        </label>
+        <label>メッセージ送信上限
+          <input type="number" id="limit" min="1" step="1" placeholder="0"> 回
+        </label>
+      </div>
+
+      <details>
+        <summary>メンション設定</summary>
+        <div class="detail-content">
+          <label>メンションするユーザーID一覧
+            <textarea id="mentionIds" rows="2" placeholder="カンマ / 改行 / スペースで区切る 123456789012345678,123456789012345678"></textarea>
+          </label>
+          <button type="button" id="fetchMentions" class="secondary">メンション自動取得</button>
+        </div>
+      </details>
+
+      <details>
+        <summary>投票設定</summary>
+        <div class="detail-content">
+          <label>投票 タイトル
+            <input type="text" id="pollTitle" placeholder="投票タイトル">
+          </label>
+          <label>投票 選択肢
+            <textarea id="pollAnswers" rows="2" placeholder="カンマ / 改行 / スペースで区切る 選択肢1,選択肢2,..."></textarea>
+          </label>
+        </div>
+      </details>
+
+      <button id="submitBtn" type="submit" class="primary" disabled>実行</button>
+    </form>
+
+    <div class="button-container">
+      <button id="stopSpam" class="secondary">スパム停止</button>
+      <button id="leaveBtn" class="secondary">サーバー退出</button>
+    </div>
+
+    <div id="log"></div>
+  </div>
+</body>
+</html>
